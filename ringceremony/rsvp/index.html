@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSVP - Anish & Annesha</title>
+    <style>
+        :root {
+            --primary: #D4AF37;
+            /* Elegant Gold */
+            --bg: #FAFAFA;
+            --text: #333;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            border-top: 5px solid var(--primary);
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        p.subtitle {
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+            /* Fixes padding issues */
+            font-family: inherit;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        button:hover {
+            background-color: #b39028;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #success-message {
+            color: #27ae60;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Ring Ceremony</h1>
+        <p class="subtitle">Anish & Annesha</p>
+
+        <form name="submit-to-google-sheet">
+            <div class="form-group">
+                <label>FULL NAME</label>
+                <input name="Name" type="text" placeholder="e.g., Rahul Sharma" required>
+            </div>
+
+            <div class="form-group">
+                <label>NUMBER OF GUESTS</label>
+                <input name="Guests" type="number" min="1" value="1" required>
+            </div>
+
+            <div class="form-group">
+                <label>DIETARY RESTRICTIONS</label>
+                <input name="Diet" type="text" placeholder="e.g., Vegetarian, No Dairy (Optional)">
+            </div>
+
+            <div class="form-group">
+                <label>MESSAGE FOR THE COUPLE</label>
+                <textarea name="Message" rows="3" placeholder="Your wishes..."></textarea>
+            </div>
+
+            <button type="submit" id="submit-btn">RSVP Now</button>
+        </form>
+
+        <div id="success-message" class="hidden">
+            <h3>Thank you!</h3>
+            <p>We can't wait to celebrate with you.</p>
+        </div>
+    </div>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyNCqJAVwO7tqQVP4u2JXTJ5jBQ5kWh-SJcYHg4EJ-roK1Os_WieUSTLBemQwwQ3f3kfg/exec';
+        const form = document.forms['submit-to-google-sheet'];
+        const btn = document.getElementById('submit-btn');
+        const successMsg = document.getElementById('success-message');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            btn.innerText = "Sending...";
+            fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+                .then(response => {
+                    form.classList.add('hidden');
+                    successMsg.classList.remove('hidden');
+                })
+                .catch(error => {
+                    btn.innerText = "Error! Try again.";
+                    console.error('Error!', error.message);
+                });
+        });
+    </script>
+
+</body>
+
+</html>
